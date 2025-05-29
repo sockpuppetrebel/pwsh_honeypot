@@ -1,0 +1,41 @@
+# Certificate files (security sensitive)
+certificates/
+*.pfx
+*.pem
+*.crt
+*.key
+*.csr
+
+# PowerShell specific
+*.ps1xml
+*.psd1
+*.psm1.orig
+
+# Output files and logs
+output/
+logs/
+*.log
+*.csv
+*.txt
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE files
+.vscode/
+.idea/
+
+# Backup files
+*.bak
+*.backup
