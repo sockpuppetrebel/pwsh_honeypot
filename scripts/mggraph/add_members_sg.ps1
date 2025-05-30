@@ -35,9 +35,11 @@ Write-Host "✔ Found group '$groupName' with ID: $groupId" -ForegroundColor Gre
 # ====== DEFINE UPN LIST ======
 $upns = @(
     "jack.mcclean@optimizely.com",
+    "mike.cartwright@optimizely.com",
     "paul.gray@optimizely.com",
     "william.lapuma@optimizely.com",
     "mark.ryan@optimizely.com",
+    "matt.payne@optimizely.com",
     "david.bingham@optimizely.com",
     "anna.parback@optimizely.com",
     "jack.joseph@episerver.com",
@@ -45,9 +47,13 @@ $upns = @(
     "sean.groat@optimizely.com",
     "brandon.halvorson@optimizely.com",
     "daniel.martell@optimizely.com",
+    "jon.jones@optimizely.com",
+    "rob.stoves@optimizely.com",
     "nuno.figueiredo@optimizely.com",
     "marcus.hoffmann@optimizely.com",
+    "robert.saunders@optimizely.com",
     "zach.coulter@optimizely.com",
+    "phil.yates@optimizely.com",
     "shannon.gray@optimizely.com",
     "anatoliy.savinov@optimizely.com",
     "brett.samuels@optimizely.com",
@@ -56,8 +62,10 @@ $upns = @(
     "vimi.kaul@optimizely.com",
     "mark.wakelin@optimizely.com",
     "chynna.roberts@optimizely.com",
+    "tarik.antunes@optimizely.com",
     "alexandra.vanheel@optimizely.com",
     "jennifer.lovett@optimizely.com",
+    "terrence.mcgregor@optimizely.com",
     "robin.leclerc@optimizely.com"
 )
 
