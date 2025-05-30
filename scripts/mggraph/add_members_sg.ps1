@@ -1,27 +1,12 @@
-# ====== CERTIFICATE AUTH CONFIG ======
+# ====== INTERACTIVE AUTH CONFIG ======
 $tenantId = "3ec00d79-021a-42d4-aac8-dcb35973dff2"
-$clientId = "fe2a9efe-3000-4b02-96ea-344a2583dd52"
-$pfxPath = "$env:USERPROFILE\azureappauth.pfx"
-
-# ====== LOAD CERTIFICATE ======
-if (-not (Test-Path $pfxPath)) {
-    Write-Host "❌ Certificate file not found: $pfxPath" -ForegroundColor Red
-    return
-}
-
-try {
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
-    $cert.Import($pfxPath, $null, "Exportable,PersistKeySet")
-} catch {
-    Write-Host "❌ Failed to load certificate: $($_.Exception.Message)" -ForegroundColor Red
-    return
-}
 
 # ====== CONNECT TO MICROSOFT GRAPH ======
 try {
+    Write-Host "🔐 Connecting to Microsoft Graph (device code login)..." -ForegroundColor Yellow
     Connect-MgGraph -TenantId $tenantId `
-                    -ClientId $clientId `
-                    -Certificate $cert `
+                    -Scopes "Group.ReadWrite.All", "User.Read.All" `
+                    -UseDeviceAuthentication `
                     -NoWelcome
 } catch {
     Write-Host "❌ Failed to connect to Microsoft Graph: $($_.Exception.Message)" -ForegroundColor Red
@@ -30,14 +15,15 @@ try {
 
 # ====== VERIFY CONTEXT ======
 $context = Get-MgContext
-if ($context.AuthType -ne "AppOnly") {
-    Write-Host "❌ Authentication failed. Expected AppOnly, got: $($context.AuthType)" -ForegroundColor Red
+if (-not $context) {
+    Write-Host "❌ Authentication failed - no valid context" -ForegroundColor Red
     return
 }
-Write-Host "✔ Connected to Microsoft Graph with AppOnly authentication" -ForegroundColor Green
+Write-Host "✔ Connected to Microsoft Graph successfully" -ForegroundColor Green
+Write-Host "ℹ Account: $($context.Account)" -ForegroundColor Cyan
 
 # ====== LOOK UP GROUP ID ======
-$groupName = "sg_shareworks"
+$groupName = "SG_Shareworks_Participant"
 $group = Get-MgGroup -Filter "displayName eq '$groupName'"
 if (-not $group) {
     Write-Host "❌ Group '$groupName' not found." -ForegroundColor Red
@@ -87,7 +73,7 @@ foreach ($upn in $upns) {
             continue
         }
         
-        Add-MgGroupMember -GroupId $groupId -DirectoryObjectId $user.Id -ErrorAction Stop
+        New-MgGroupMember -GroupId $groupId -DirectoryObjectId $user.Id -ErrorAction Stop
         Write-Host "✔ Added $upn to $groupName" -ForegroundColor Green
     } catch {
         if ($_.Exception.Message -like "*One or more added object references already exist*") {
