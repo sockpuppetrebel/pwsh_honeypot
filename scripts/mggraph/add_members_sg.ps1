@@ -61,8 +61,23 @@ $upns = @(
     "robin.leclerc@optimizely.com"
 )
 
+# ====== PREPARE CSV OUTPUT ======
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$csvPath = "group_membership_results_$timestamp.csv"
+$results = @()
+
+Write-Host "ℹ Results will be saved to: $csvPath" -ForegroundColor Cyan
+
 # ====== ADD USERS TO GROUP ======
 foreach ($upn in $upns) {
+    $result = [PSCustomObject]@{
+        UserPrincipalName = $upn
+        Action = ""
+        Status = ""
+        ErrorMessage = ""
+        Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    }
+    
     try {
         $user = Get-MgUser -UserId $upn -ErrorAction Stop
         
@@ -70,16 +85,41 @@ foreach ($upn in $upns) {
         $existingMember = Get-MgGroupMember -GroupId $groupId | Where-Object { $_.Id -eq $user.Id }
         if ($existingMember) {
             Write-Host "ℹ $upn is already a member of $groupName" -ForegroundColor Cyan
+            $result.Action = "Skipped"
+            $result.Status = "Already Member"
             continue
         }
         
         New-MgGroupMember -GroupId $groupId -DirectoryObjectId $user.Id -ErrorAction Stop
         Write-Host "✔ Added $upn to $groupName" -ForegroundColor Green
+        $result.Action = "Added"
+        $result.Status = "Success"
     } catch {
         if ($_.Exception.Message -like "*One or more added object references already exist*") {
             Write-Host "ℹ $upn is already a member of $groupName" -ForegroundColor Cyan
+            $result.Action = "Skipped"
+            $result.Status = "Already Member"
         } else {
             Write-Host "⚠ Failed to add ${upn}: $($_.Exception.Message)" -ForegroundColor Yellow
+            $result.Action = "Failed"
+            $result.Status = "Error"
+            $result.ErrorMessage = $_.Exception.Message
         }
     }
+    
+    $results += $result
 }
+
+# ====== EXPORT RESULTS TO CSV ======
+$results | Export-Csv -Path $csvPath -NoTypeInformation
+Write-Host "`n📄 Results exported to: $csvPath" -ForegroundColor Green
+
+# ====== SUMMARY ======
+$added = ($results | Where-Object { $_.Action -eq "Added" }).Count
+$skipped = ($results | Where-Object { $_.Action -eq "Skipped" }).Count
+$failed = ($results | Where-Object { $_.Action -eq "Failed" }).Count
+
+Write-Host "`n📊 SUMMARY:" -ForegroundColor Magenta
+Write-Host "   ✔ Added: $added users" -ForegroundColor Green
+Write-Host "   ℹ Skipped: $skipped users (already members)" -ForegroundColor Cyan
+Write-Host "   ⚠ Failed: $failed users" -ForegroundColor Yellow
