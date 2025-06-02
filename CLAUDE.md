@@ -1,5 +1,11 @@
 # Claude Configuration
 
+## IMPORTANT: Multiple CLAUDE.md Files Rule
+- When updating this CLAUDE.md file, ALWAYS search for all copies across the project
+- Update every instance found to keep them synchronized
+- Use Glob tool with pattern "**/CLAUDE.md" to find all instances
+- This ensures consistency across the entire codebase
+
 ## Code Style Preferences
 - NO emojis in any code, documentation, or README files
 - NO Claude references or attribution in code
@@ -55,6 +61,13 @@
 - Test locally before committing
 - Never commit sensitive data or credentials
 - Use .gitignore for generated files and secrets
+
+## Website Learning Section Updates
+- The "What I Learned Building This" section in `site/index.html` is where we track project learnings and challenges
+- When user mentions adding learnings or challenges from the cloud resume project, update the HTML learning section (NOT this CLAUDE.md file)
+- Add new learning items after the most recent ones but before the "Collapsible older items section" comment
+- Each learning item should follow the existing format with Challenge/Solution structure
+- Keep descriptions concise and focused on the key technical insight
 
 ## Git Push Rules - CRITICAL REMINDERS
 - **NEVER** attempt to push to GitHub directly due to SSH authentication requirements
