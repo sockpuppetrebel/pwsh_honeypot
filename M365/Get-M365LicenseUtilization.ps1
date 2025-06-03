@@ -27,15 +27,21 @@ param(
     [int]$InactiveDays = 90
 )
 
-# Connect to Microsoft Graph
-try {
-    Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "AuditLog.Read.All"
-    Write-Host "Connected to Microsoft Graph" -ForegroundColor Green
-}
-catch {
-    Write-Error "Failed to connect to Microsoft Graph: $($_.Exception.Message)"
-    exit 1
-}
+  # Connect to Microsoft Graph with certificate
+  try {
+      $certThumbprint = "5C27245587D066005B3F9B5098AD5A3BA22E69CC"
+      $tenantId = "3ec00d79-021a-42d4-aac8-dcb35973dff2"
+      $clientId = "fe2a9efe-3000-4b02-96ea-344a2583dd52"
+
+      Connect-MgGraph -ClientId $clientId -TenantId $tenantId -CertificateThumbprint
+  $certThumbprint
+      Write-Host "Connected to Microsoft Graph using certificate" -ForegroundColor Green
+  }
+  catch {
+      Write-Error "Failed to connect to Microsoft Graph: $($_.Exception.Message)"
+      exit 1
+  }
+
 
 Write-Host "=== M365 LICENSE UTILIZATION ANALYSIS ===" -ForegroundColor Cyan
 
