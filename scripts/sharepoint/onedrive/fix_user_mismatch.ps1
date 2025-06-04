@@ -1,4 +1,4 @@
-# Fix User Mismatch for Kaila Trapani across all SharePoint/OneDrive sites
+# Fix User Mismatch for users across all SharePoint/OneDrive sites
 # This script will remove the problematic user account from all sites
 
 # Your tenant configuration
