@@ -1,26 +1,42 @@
 # PowerShell Scripts Collection
 
-A comprehensive, well-organized collection of PowerShell scripts for managing Microsoft 365 services, with a focus on SharePoint Online permission management and user administration.
+A comprehensive, well-organized collection of PowerShell scripts for managing Microsoft 365 services, with both Windows-specific and cross-platform versions. Designed for IT professionals who work across different operating systems and need reliable automation tools.
+
+## Platform Support
+
+**All scripts have been refactored for cross-platform compatibility on macOS unless explicitly stated otherwise.**
+
+- **Cross-Platform Scripts** (`/cross-platform/`) - Work on Windows, macOS, and Linux with PowerShell Core 7.x+
+- **Windows-Only Scripts** (`/scripts/`) - Require Windows PowerShell 5.1 or Windows-specific modules (PnP, SPO)
+
+This dual approach addresses the real-world challenge of bouncing between local macOS development and Windows VMs while maintaining full functionality across environments.
 
 ## Directory Structure
 
 ```
-PowerShell-Scripts/
+pwsh-honeypot/
 ├── Config.ps1                           # Centralized configuration
-├── certificates/                        # Authentication certificates  
-│   ├── azure/                          # Azure app certificates
-│   └── graph/                          # Microsoft Graph certificates
-├── scripts/                            # PowerShell scripts by service
+├── cross-platform/                      # 🚀 Cross-platform scripts (Windows/macOS/Linux)
+│   ├── exchange/                       # Exchange Online management
+│   ├── mggraph/                        # Microsoft Graph operations
+│   │   └── user_management/            # User lookup and administration
+│   ├── m365/                          # Microsoft 365 operations
+│   │   └── groups/                     # Group management scripts
+│   └── README.md                       # Cross-platform documentation
+├── scripts/                            # 🪟 Windows-only scripts (PowerShell 5.1)
 │   ├── exchange/                       # Exchange Online management
 │   ├── mggraph/                        # Microsoft Graph API scripts
 │   │   ├── group_management/           # Azure AD group operations
 │   │   ├── user_management/            # User administration
-│   │   └── utilities/                  # Cross-platform utilities (Python)
-│   └── sharepoint/                     # SharePoint Online management
+│   │   └── utilities/                  # Mixed utilities (Python/PowerShell)
+│   └── sharepoint/                     # SharePoint Online management (PnP/SPO)
 │       ├── permissions/                # Permission management (removal, modification)
 │       ├── auditing/                   # Permission auditing and reporting  
 │       ├── onedrive/                   # OneDrive-specific operations
 │       └── utilities/                  # Authentication, testing, diagnostics
+├── certificates/                        # Authentication certificates  
+│   ├── azure/                          # Azure app certificates
+│   └── graph/                          # Microsoft Graph certificates
 ├── output/                             # Script outputs and reports
 │   ├── sharepoint/audit_reports/       # SharePoint audit reports
 │   ├── sharepoint/permission_reports/  # Permission scan results

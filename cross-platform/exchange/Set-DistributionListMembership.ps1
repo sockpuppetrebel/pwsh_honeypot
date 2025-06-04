@@ -1,8 +1,9 @@
 #Requires -Modules ExchangeOnlineManagement
+# CROSS-PLATFORM: Compatible with PowerShell Core on Windows, macOS, and Linux
 
 <#
 .SYNOPSIS
-    Sets exact membership for a distribution list based on provided names/UPNs
+    Sets exact membership for a distribution list based on provided names/UPNs (Cross-Platform Version)
     
 .DESCRIPTION
     This script replaces the entire membership of a distribution list with the exact
