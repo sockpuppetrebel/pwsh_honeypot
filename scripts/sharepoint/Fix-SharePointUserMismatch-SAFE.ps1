@@ -62,7 +62,7 @@ if ($WhatIf) {
     Write-Host "User permissions will be removed!" -ForegroundColor Yellow
     
     # Final confirmation
-    Write-Host "`nAre you ABSOLUTELY SURE you want to proceed? Type 'YES' to continue: " -NoNewline -ForegroundColor Red
+    Write-Host "`nAre you ABSOLUTELY SURE you want to proceed? Type 'YES' to continue: " -ForegroundColor Red
     $confirm = Read-Host
     if ($confirm -ne 'YES') {
         Write-Host "Cancelled by user" -ForegroundColor Yellow
@@ -100,7 +100,7 @@ try {
     Write-Host "✗ User not found in tenant or error occurred: $_" -ForegroundColor Red
     Write-Log "User validation failed: $_" "ERROR"
     
-    Write-Host "`nDo you want to continue anyway? (Y/N): " -NoNewline
+    Write-Host "`nDo you want to continue anyway? (Y/N): "
     $continue = Read-Host
     if ($continue -ne 'Y' -and $continue -ne 'y') {
         exit 0

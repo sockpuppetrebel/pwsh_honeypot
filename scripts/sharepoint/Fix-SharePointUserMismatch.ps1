@@ -120,7 +120,7 @@ Write-Host "============================" -ForegroundColor Cyan
 Write-Log "Process completed. Sites processed: $processedCount, Removed from: $removedCount, Errors: $errorCount"
 
 # Verification step
-Write-Host "`nWould you like to verify the removal by checking a few sites? (Y/N): " -NoNewline
+Write-Host "`nWould you like to verify the removal by checking a few sites? (Y/N): "
 $verify = Read-Host
 
 if ($verify -eq 'Y' -or $verify -eq 'y') {

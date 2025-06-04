@@ -86,6 +86,25 @@
 - This maintains functional examples while protecting individual privacy
 - All scripts should demonstrate functionality without exposing real employee information
 
+## Cross-Platform Compatibility Rules - CRITICAL
+- **CHECK MODULE REQUIREMENTS** before modifying any script for macOS compatibility
+- **WINDOWS-ONLY MODULES** that must NOT be modified for macOS:
+  - `Microsoft.Online.SharePoint.PowerShell` (SharePoint Online Management Shell)
+  - `SharePointPnPPowerShellOnline` (PnP PowerShell for SharePoint Online)
+  - Any script using `Connect-PnPOnline` or PnP cmdlets
+  - Any script using `Connect-SPOService` or SPO cmdlets
+  - Scripts requiring Windows PowerShell 5.1 specifically
+- **MACOS-COMPATIBLE MODULES** that can be cross-platform:
+  - `Microsoft.Graph.*` (all Graph modules)
+  - `ExchangeOnlineManagement`
+  - `AzureAD` / `Microsoft.Graph.Entra`
+  - Custom REST API calls
+- **DUAL STRUCTURE APPROACH**:
+  - Keep original Windows-only scripts in existing locations
+  - Create `/cross-platform/` versions for scripts that can work on both
+  - Use clear naming: `script-name-windows.ps1` vs `script-name-crossplatform.ps1`
+- **BEFORE MODIFYING**: Always check script headers for module requirements and platform restrictions
+
 ## Website Learning Section Updates
 - The "What I Learned Building This" section in `site/index.html` is where we track project learnings and challenges
 - When user mentions adding learnings or challenges from the cloud resume project, update the HTML learning section (NOT this CLAUDE.md file)
