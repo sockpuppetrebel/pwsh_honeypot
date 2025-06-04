@@ -18,6 +18,10 @@
 .PARAMETER InputFile
     Path to text file containing display names (one per line)
     
+.PARAMETER RawText
+    Raw text block containing names (paste directly from email/document)
+    Automatically parses names separated by newlines, commas, or semicolons
+    
 .PARAMETER ExportToCsv
     Export results to CSV file
     
@@ -36,6 +40,14 @@
 .EXAMPLE
     .\Get-UPNByDisplayName.ps1 -DisplayName "John" -ExactMatch:$false
     
+.EXAMPLE
+    .\Get-UPNByDisplayName.ps1 -RawText "John Smith
+    Jane Doe
+    Bob Johnson"
+    
+.EXAMPLE
+    .\Get-UPNByDisplayName.ps1 -RawText "John Smith, Jane Doe, Bob Johnson"
+    
 .NOTES
     Author: System Administrator
     Version: 1.0
@@ -52,6 +64,9 @@ param(
     
     [Parameter(Mandatory=$true, ParameterSetName = "File")]
     [string]$InputFile,
+    
+    [Parameter(Mandatory=$true, ParameterSetName = "RawText")]
+    [string]$RawText,
     
     [Parameter(Mandatory=$false)]
     [switch]$ExportToCsv,
@@ -132,6 +147,16 @@ switch ($PSCmdlet.ParameterSetName) {
         }
         $namesToProcess = Get-Content $InputFile | Where-Object { $_.Trim() -ne "" }
         Write-ColorOutput "Loaded $($namesToProcess.Count) names from file" -ForegroundColor White
+    }
+    "RawText" {
+        # Parse raw text - handle multiple separators
+        $rawNames = $RawText -split "`n|`r`n|,|;" | 
+            ForEach-Object { $_.Trim() } | 
+            Where-Object { $_ -ne "" -and $_ -notmatch "^\s*$" }
+        
+        $namesToProcess = $rawNames
+        Write-ColorOutput "Parsed $($namesToProcess.Count) names from raw text" -ForegroundColor White
+        Write-ColorOutput "Names found: $($namesToProcess -join ', ')" -ForegroundColor Gray
     }
 }
 
