@@ -62,6 +62,18 @@
 - Never commit sensitive data or credentials
 - Use .gitignore for generated files and secrets
 
+## PowerShell Honeypot Script Management - CRITICAL
+- **ALWAYS** automatically commit new scripts and major updates to the pwsh-honeypot repository
+- **IMMEDIATELY** after creating or significantly updating any PowerShell script in this repo, run:
+  ```bash
+  git add [script-path]
+  git commit -m "[brief description of script/change]"
+  ```
+- This ensures the remote repository stays current with all script development
+- Exception: Only skip auto-commit for experimental/debugging code that isn't ready for production
+- Always provide clear, professional commit messages that describe the script's purpose
+- After committing, remind user to push changes: "Please push to GitHub using: git push origin main"
+
 ## Website Learning Section Updates
 - The "What I Learned Building This" section in `site/index.html` is where we track project learnings and challenges
 - When user mentions adding learnings or challenges from the cloud resume project, update the HTML learning section (NOT this CLAUDE.md file)
