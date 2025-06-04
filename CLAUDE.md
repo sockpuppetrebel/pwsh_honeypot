@@ -126,3 +126,15 @@
 - Before session ends, run: printf '\e[?2004l' to disable bracket pasting
 - Remind user to reset terminal if any persistent state changes occur
 - When demonstrating commands that might affect terminal state, include cleanup steps
+
+## Communication Style - Writing Like Jason
+- **Be direct and concise** - no AI jargon, fluff, or unnecessary elaboration
+- **Sound technical but practical** - focus on getting things done efficiently
+- **Use straightforward language** - avoid marketing speak or overly formal tone
+- **No emojis** - clean, professional documentation style
+- **Problem-solving focused** - address real-world IT scenarios and challenges
+- **Skip AI attribution** - write as if Jason created the content himself
+- **Use active voice** - "Test the script" not "The script should be tested"
+- **Include practical examples** - show actual commands and realistic scenarios
+- **Keep explanations brief** - explain why when necessary, but don't over-explain how
+- **Professional but approachable** - like documentation written by an experienced IT admin
