@@ -3,7 +3,7 @@
 # This catches permissions tied to old Azure AD identities that email searches miss
 
 param(
-    [string]$UserEmail = "kaila.trapani@optimizely.com",
+    [string]$UserEmail = "first.last@optimizely.com",
     [int]$ThrottleLimit = 15,
     [int]$BatchSize = 100,
     [int]$MaxSitesToFind = 50
@@ -98,7 +98,7 @@ $scriptBlock = {
                 # Check if this user matches our target by email, login, or title
                 if ($siteUser.Email -like "*$userEmail*" -or
                     $siteUser.LoginName -like "*$userEmail*" -or
-                    ($siteUser.Title -like "*kaila*" -and $siteUser.Title -like "*trapani*")) {
+                    ($siteUser.Title -like "*first*" -and $siteUser.Title -like "*last*")) {
                     
                     $foundIdentities += [PSCustomObject]@{
                         FoundIn = "Site Users List"
@@ -126,7 +126,7 @@ $scriptBlock = {
                         # Check by email, login name, or name patterns
                         if ($member.Email -like "*$userEmail*" -or
                             $member.LoginName -like "*$userEmail*" -or
-                            ($member.Title -like "*kaila*" -and $member.Title -like "*trapani*")) {
+                            ($member.Title -like "*first*" -and $member.Title -like "*last*")) {
                             
                             $foundIdentities += [PSCustomObject]@{
                                 FoundIn = "Group: $($group.Title)"
@@ -155,7 +155,7 @@ $scriptBlock = {
             foreach ($assignment in $roleAssignments) {
                 if ($assignment.Member.Email -like "*$userEmail*" -or
                     $assignment.Member.LoginName -like "*$userEmail*" -or
-                    ($assignment.Member.Title -like "*kaila*" -and $assignment.Member.Title -like "*trapani*")) {
+                    ($assignment.Member.Title -like "*first*" -and $assignment.Member.Title -like "*last*")) {
                     
                     $roleDefinitions = $assignment.RoleDefinitionBindings | ForEach-Object { $_.Name }
                     $foundIdentities += [PSCustomObject]@{
@@ -180,7 +180,7 @@ $scriptBlock = {
             foreach ($admin in $admins) {
                 if ($admin.Email -like "*$userEmail*" -or
                     $admin.LoginName -like "*$userEmail*" -or
-                    ($admin.Title -like "*kaila*" -and $admin.Title -like "*trapani*")) {
+                    ($admin.Title -like "*first*" -and $admin.Title -like "*last*")) {
                     
                     $foundIdentities += [PSCustomObject]@{
                         FoundIn = "Site Collection Administrators"

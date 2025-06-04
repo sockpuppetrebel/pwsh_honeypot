@@ -2,18 +2,9 @@
 
 <#
 .SYNOPSIS
-    Analyzes M365 license utilization and identifies optimization opportunities
+    Analyzes M365 license utilization using app-only certificate authentication
 .DESCRIPTION
-    Generates detailed reports on license assignments, unused licenses, and cost optimization
-    opportunities. Includes service plan analysis and user activity correlation.
-.PARAMETER ExportToExcel
-    Export detailed report to Excel format
-.PARAMETER ShowInactiveUsers
-    Include users who haven't signed in recently
-.PARAMETER InactiveDays
-    Days to consider a user inactive (default: 90)
-.EXAMPLE
-    .\Get-M365LicenseUtilization.ps1 -ExportToExcel -ShowInactiveUsers -InactiveDays 60
+    Uses certificate-based app-only authentication for unattended scenarios
 #>
 
 param(
@@ -27,54 +18,50 @@ param(
     [int]$InactiveDays = 90
 )
 
-  
-# Connect to Microsoft Graph
-$connected = $false
+# App registration details
 $tenantId = '3ec00d79-021a-42d4-aac8-dcb35973dff2'
 $clientId = 'fe2a9efe-3000-4b02-96ea-344a2583dd52'
+$certThumbprint = '5C27245587D066005B3F9B5098AD5A3BA22E69CC'  # Original thumbprint from your script
 
-# Method 1: Try interactive authentication first (works best on macOS)
+Write-Host "Connecting to Microsoft Graph using app-only authentication..." -ForegroundColor Yellow
+
+# For macOS: Export cert from Keychain and use it
+$certPath = "$HOME/.certs/optimizely-graph.pfx"
+
+# Check if we need to export the certificate
+if (-not (Test-Path $certPath)) {
+    Write-Host "Certificate not found at $certPath" -ForegroundColor Yellow
+    Write-Host "`nTo use certificate authentication on macOS:" -ForegroundColor Cyan
+    Write-Host "1. Open Keychain Access" -ForegroundColor White
+    Write-Host "2. Find your certificate (first.last@optimizely.com)" -ForegroundColor White
+    Write-Host "3. Export it as a .p12/.pfx file" -ForegroundColor White
+    Write-Host "4. Save it to: $certPath" -ForegroundColor White
+    Write-Host "5. Run this script again" -ForegroundColor White
+    Write-Host "`nAlternatively, use the interactive version: ./Get-M365LicenseUtilization.ps1" -ForegroundColor Yellow
+    exit 1
+}
+
+# Load certificate from file
 try {
-    Write-Host "Attempting interactive authentication..." -ForegroundColor Yellow
-    Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "Organization.Read.All" -NoWelcome
+    $certPassword = Read-Host -AsSecureString "Enter certificate password"
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($certPath, $certPassword)
+    
+    # Connect using certificate
+    Connect-MgGraph -ClientId $clientId -TenantId $tenantId -Certificate $cert -NoWelcome
     
     # Verify connection
     $context = Get-MgContext
     if ($context) {
-        Write-Host "Connected to Microsoft Graph successfully" -ForegroundColor Green
-        Write-Host "Authenticated as: $($context.Account)" -ForegroundColor Green
-        $connected = $true
+        Write-Host "Connected successfully using certificate" -ForegroundColor Green
+        Write-Host "App: $($context.AppName)" -ForegroundColor White
+        Write-Host "TenantId: $($context.TenantId)" -ForegroundColor White
+    } else {
+        throw "Connection verification failed"
     }
-}
-catch {
-    Write-Warning "Interactive authentication failed: $($_.Exception.Message)"
-}
-
-# Method 2: Try device code if interactive failed
-if (-not $connected) {
-    try {
-        Write-Host "Attempting device code authentication..." -ForegroundColor Yellow
-        Connect-MgGraph -ClientId $clientId -TenantId $tenantId -UseDeviceCode -NoWelcome
-        
-        # Verify connection
-        $context = Get-MgContext
-        if ($context) {
-            Write-Host "Connected to Microsoft Graph successfully" -ForegroundColor Green
-            Write-Host "Authenticated as: $($context.Account)" -ForegroundColor Green
-            $connected = $true
-        }
-    }
-    catch {
-        Write-Error "Device code authentication failed: $($_.Exception.Message)"
-    }
-}
-
-# Exit if not connected
-if (-not $connected) {
-    Write-Error "Failed to connect to Microsoft Graph. Please check your credentials and permissions."
+} catch {
+    Write-Error "Failed to connect: $_"
     exit 1
 }
-
 
 Write-Host "=== M365 LICENSE UTILIZATION ANALYSIS ===" -ForegroundColor Cyan
 

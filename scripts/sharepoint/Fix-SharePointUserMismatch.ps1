@@ -6,7 +6,7 @@ param(
     [string]$AdminUrl = "https://episerver99-admin.sharepoint.com/",
     
     [Parameter(Mandatory=$true)]
-    [string]$UserToRemove = "kaila.trapani@optimizely.com"
+    [string]$UserToRemove = "first.last@optimizely.com"
 )
 
 # Import required module
