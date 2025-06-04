@@ -14,9 +14,6 @@
 #>
 
 # Function 1: Add SPO admin to all OneDrive site admin
-  $AdminURL = "https://episerver99-admin.sharepoint.com/"
-  $AdminName = "jason.slater@optimizely.com"
-  $UserToRemove = "kaila.trapani@optimizely.com"
 function Add-SPOAdminToAllOneDrive {
     param(
         [Parameter(Mandatory=$true)]

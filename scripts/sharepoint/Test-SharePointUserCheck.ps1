@@ -6,7 +6,7 @@ param(
     [string]$AdminUrl = "https://episerver99-admin.sharepoint.com/",
     
     [Parameter(Mandatory=$true)]
-    [string]$UserToCheck = "kaila.trapani@optimizely.com",
+    [string]$UserToCheck = "first.last@optimizely.com",
     
     [Parameter()]
     [string[]]$SiteUrls = @(),  # Specific sites to check, empty = check all

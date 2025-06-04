@@ -74,6 +74,18 @@
 - Always provide clear, professional commit messages that describe the script's purpose
 - After committing, remind user to push changes: "Please push to GitHub using: git push origin main"
 
+## PII Protection and Clean Code - CRITICAL
+- **NEVER** commit scripts containing real names or personally identifiable information (PII)
+- **ALWAYS** sanitize email addresses before committing - replace real names with generic format
+- **STANDARD FORMAT**: Replace all real email addresses with `first.last@optimizely.com`
+- **AUDIT REGULARLY**: Check existing scripts for PII and clean them immediately
+- **EXAMPLES TO REPLACE**:
+  - `john.smith@optimizely.com` → `first.last@optimizely.com`
+  - `kaila.trapani@optimizely.com` → `first.last@optimizely.com`
+  - Name pattern searches like `*kaila*` → `*first*`
+- This maintains functional examples while protecting individual privacy
+- All scripts should demonstrate functionality without exposing real employee information
+
 ## Website Learning Section Updates
 - The "What I Learned Building This" section in `site/index.html` is where we track project learnings and challenges
 - When user mentions adding learnings or challenges from the cloud resume project, update the HTML learning section (NOT this CLAUDE.md file)

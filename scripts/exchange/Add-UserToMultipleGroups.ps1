@@ -23,7 +23,7 @@
     Whether to auto-map shared mailboxes in Outlook
     
 .EXAMPLE
-    .\Add-UserToMultipleGroups.ps1 -UserToAdd "reis.holmes@optimizely.com"
+    .\Add-UserToMultipleGroups.ps1 -UserToAdd "first.last@optimizely.com"
     
 .EXAMPLE
     .\Add-UserToMultipleGroups.ps1 -UserToAdd "user@domain.com" -MailboxPermission "ReadPermission"
