@@ -18,8 +18,6 @@
 .PARAMETER InputType
     Type of input provided: "UPN" or "DisplayName"
     
-.PARAMETER WhatIf
-    Shows what changes would be made without actually making them
     
 .EXAMPLE
     .\Set-DistributionListMembership.ps1
@@ -44,10 +42,7 @@ param(
     
     [Parameter(Mandatory=$false)]
     [ValidateSet("UPN", "DisplayName")]
-    [string]$InputType,
-    
-    [Parameter(Mandatory=$false)]
-    [switch]$WhatIf
+    [string]$InputType
 )
 
 # Function to write colored output
@@ -256,7 +251,7 @@ if ($toAdd.Count -gt 0) {
 }
 
 # Confirmation
-if (-not $WhatIf -and ($toRemove.Count -gt 0 -or $toAdd.Count -gt 0)) {
+if (-not $WhatIfPreference -and ($toRemove.Count -gt 0 -or $toAdd.Count -gt 0)) {
     Write-ColorOutput "`nProceed with these changes? (Y/N): " -ForegroundColor Yellow -NoNewline
     $confirm = Read-Host
     if ($confirm -ne 'Y' -and $confirm -ne 'y') {
@@ -269,7 +264,7 @@ if (-not $WhatIf -and ($toRemove.Count -gt 0 -or $toAdd.Count -gt 0)) {
 $removeErrors = 0
 $addErrors = 0
 
-if ($WhatIf) {
+if ($WhatIfPreference) {
     Write-ColorOutput "`n[WHATIF] Would make the above changes" -ForegroundColor Cyan
 } else {
     Write-ColorOutput "`nExecuting changes..." -ForegroundColor Yellow
@@ -307,7 +302,7 @@ if ($WhatIf) {
 Write-ColorOutput "`n=== FINAL SUMMARY ===" -ForegroundColor Cyan
 Write-ColorOutput "Distribution List: $($dlInfo.DisplayName)" -ForegroundColor White
 
-if ($WhatIf) {
+if ($WhatIfPreference) {
     Write-ColorOutput "Mode: WHATIF - No changes made" -ForegroundColor Cyan
 } else {
     Write-ColorOutput "Removed: $($toRemove.Count - $removeErrors) of $($toRemove.Count)" -ForegroundColor $(if ($removeErrors -eq 0) { "Green" } else { "Yellow" })
