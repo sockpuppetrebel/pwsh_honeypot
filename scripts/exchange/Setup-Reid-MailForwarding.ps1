@@ -2,11 +2,11 @@
 
 <#
 .SYNOPSIS
-    Sets up mail forwarding for specific legacy mailboxes to first.last@optimizely.com
+    Example script using the simple mailbox forwarding tool
     
 .DESCRIPTION
-    Configures mail forwarding for the specified list of legacy AWS and Ektron mailboxes
-    to first.last@optimizely.com. Preserves any existing forwarding settings.
+    Demonstrates how to use Set-MailboxForwarding-Simple.ps1 for legacy mailbox forwarding.
+    All authentication happens upfront to avoid interrupting workflows.
     
 .NOTES
     Author: Jason Slater
@@ -14,13 +14,11 @@
     Date: 2025-06-05
 #>
 
-# Import the bulk forwarding script
-$scriptPath = Join-Path $PSScriptRoot "Set-MailboxForwarding-Bulk.ps1"
+# Use the simple forwarding script (no interactive prompts)
+$scriptPath = Join-Path $PSScriptRoot "Set-MailboxForwarding-Simple.ps1"
 
-# Target recipient
+# Example configuration
 $targetRecipient = "first.last@optimizely.com"
-
-# Source mailboxes to configure
 $sourceMailboxes = @(
     "cit-aws@ektron.com",
     "ektronmanagedservices-aws@ektron.com",
@@ -34,10 +32,5 @@ $sourceMailboxes = @(
     "aws.welcome-webproofing2@episerver.net"
 )
 
-Write-Host "=== SETTING UP MAIL FORWARDING FOR USER ===" -ForegroundColor Cyan
-Write-Host "Target recipient: $targetRecipient" -ForegroundColor Yellow
-Write-Host "Number of mailboxes: $($sourceMailboxes.Count)" -ForegroundColor Yellow
-Write-Host ""
-
-# Run the bulk forwarding script
+# Run the simple forwarding script
 & $scriptPath -TargetRecipient $targetRecipient -SourceMailboxes $sourceMailboxes
