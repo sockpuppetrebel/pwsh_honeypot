@@ -209,6 +209,7 @@ $Members | ForEach-Object { Write-ColorOutput "  - $_" -ForegroundColor White }
 
 # Process members based on input type
 $resolvedMembers = @()
+$failedResolutions = @()
 
 if ($InputType -eq "DisplayName") {
     Write-ColorOutput "`nResolving display names to UPNs..." -ForegroundColor Yellow
@@ -221,6 +222,7 @@ if ($InputType -eq "DisplayName") {
             $resolvedMembers += $upn
             Write-ColorOutput "  ✓ $upn" -ForegroundColor Green
         } else {
+            $failedResolutions += $displayName
             Write-ColorOutput "  ✗ Could not resolve" -ForegroundColor Red
         }
     }
@@ -235,6 +237,16 @@ if ($resolvedMembers.Count -eq 0) {
 }
 
 Write-ColorOutput "`nResolved members: $($resolvedMembers.Count)" -ForegroundColor Green
+
+# Display failed resolutions if any
+if ($failedResolutions.Count -gt 0) {
+    Write-ColorOutput "`n=== FAILED NAME RESOLUTIONS ===" -ForegroundColor Red
+    Write-ColorOutput "The following names could not be resolved to user accounts:" -ForegroundColor Yellow
+    Write-ColorOutput "(Copy these for manual review)" -ForegroundColor Gray
+    Write-Host ""
+    $failedResolutions | ForEach-Object { Write-ColorOutput "$_" -ForegroundColor White }
+    Write-Host ""
+}
 
 # Compare current vs desired membership
 $currentUPNs = $currentMembers.PrimarySmtpAddress
