@@ -142,7 +142,7 @@ if ($invalidMailboxes.Count -gt 0) {
 
 if ($correctlyConfigured.Count -gt 0) {
     Write-ColorOutput "`n=== ALREADY CORRECTLY CONFIGURED ===" -ForegroundColor Green
-    Write-ColorOutput "These mailboxes are already forwarding to $TargetRecipient:" -ForegroundColor Green
+    Write-ColorOutput "These mailboxes are already forwarding to ${TargetRecipient}:" -ForegroundColor Green
     $correctlyConfigured | ForEach-Object { 
         $deliveryMode = if ($_.DeliverToMailboxAndForward) { "Forward AND Keep" } else { "Forward ONLY" }
         Write-ColorOutput "  ✓ $($_.Mailbox) → $($_.CurrentForwarding) ($deliveryMode)" -ForegroundColor Green 
