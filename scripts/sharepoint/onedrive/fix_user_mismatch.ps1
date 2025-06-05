@@ -4,7 +4,7 @@
 # Your tenant configuration
 $AdminURL = "https://episerver99-admin.sharepoint.com/"
 $AdminName = "jason.slater@optimizely.com"
-$UserToRemove = "kaila.trapani@optimizely.com"
+$UserToRemove = "first.last@optimizely.com"
 
 # Import the functions
 . .\manage_onedrive_admins.ps1
