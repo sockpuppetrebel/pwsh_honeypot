@@ -91,17 +91,33 @@ function Resolve-DisplayNameToUPN {
     }
 }
 
-# Connect to Exchange Online if not already connected
+# Check authentication status and connect if needed
 $exoSession = Get-PSSession | Where-Object {$_.ConfigurationName -eq "Microsoft.Exchange" -and $_.State -eq "Opened"}
-if (-not $exoSession) {
-    Write-ColorOutput "Connecting to Exchange Online..." -ForegroundColor Yellow
-    try {
-        Connect-ExchangeOnline -ShowBanner:$false
-        Write-ColorOutput "Connected to Exchange Online" -ForegroundColor Green
+$mgContext = Get-MgContext
+
+if (-not $exoSession -or -not $mgContext) {
+    Write-ColorOutput "Connecting to required services..." -ForegroundColor Yellow
+    
+    if (-not $exoSession) {
+        try {
+            Connect-ExchangeOnline -ShowBanner:$false
+            Write-ColorOutput "✓ Connected to Exchange Online" -ForegroundColor Green
+        }
+        catch {
+            Write-Error "Failed to connect to Exchange Online: $_"
+            exit 1
+        }
     }
-    catch {
-        Write-Error "Failed to connect to Exchange Online: $_"
-        exit 1
+    
+    if (-not $mgContext) {
+        try {
+            Connect-MgGraph -Scopes "User.Read.All" -NoWelcome
+            Write-ColorOutput "✓ Connected to Microsoft Graph" -ForegroundColor Green
+        }
+        catch {
+            Write-Error "Failed to connect to Microsoft Graph: $_"
+            exit 1
+        }
     }
 }
 
@@ -156,14 +172,25 @@ if (-not $Members) {
     Write-ColorOutput "(Can be separated by newlines, commas, or semicolons)" -ForegroundColor Gray
     Write-Host ""
     
-    # Collect input
+    # Collect input with better handling
     $inputLines = @()
+    $emptyLineCount = 0
+    
     do {
-        $line = Read-Host
-        if ($line.Trim() -ne "") {
-            $inputLines += $line
+        try {
+            $line = Read-Host
+            if ($line.Trim() -eq "") {
+                $emptyLineCount++
+            } else {
+                $emptyLineCount = 0
+                $inputLines += $line
+            }
         }
-    } while ($line.Trim() -ne "")
+        catch {
+            # Handle any input interruption
+            break
+        }
+    } while ($emptyLineCount -lt 2)
     
     if ($inputLines.Count -eq 0) {
         Write-Error "No members provided. Exiting."
@@ -185,18 +212,6 @@ $resolvedMembers = @()
 
 if ($InputType -eq "DisplayName") {
     Write-ColorOutput "`nResolving display names to UPNs..." -ForegroundColor Yellow
-    
-    # Connect to Microsoft Graph for name resolution
-    $mgContext = Get-MgContext
-    if (-not $mgContext) {
-        try {
-            Connect-MgGraph -Scopes "User.Read.All" -NoWelcome
-        }
-        catch {
-            Write-Error "Failed to connect to Microsoft Graph for name resolution: $_"
-            exit 1
-        }
-    }
     
     foreach ($displayName in $Members) {
         Write-ColorOutput "Resolving: $displayName" -ForegroundColor Cyan
@@ -250,14 +265,24 @@ if ($toAdd.Count -gt 0) {
     $toAdd | ForEach-Object { Write-ColorOutput "  + $_" -ForegroundColor Yellow }
 }
 
-# Confirmation
+# Confirmation with better input handling
 if (-not $WhatIfPreference -and ($toRemove.Count -gt 0 -or $toAdd.Count -gt 0)) {
-    Write-Host "`nProceed with these changes? (Y/N): " -ForegroundColor Yellow
-    $confirm = Read-Host
-    if ($confirm -ne 'Y' -and $confirm -ne 'y') {
-        Write-ColorOutput "Operation cancelled by user." -ForegroundColor Yellow
-        exit 0
-    }
+    do {
+        Write-Host "`nProceed with these changes? (Y/N): " -ForegroundColor Yellow -NoNewline
+        $confirm = Read-Host
+        $confirm = $confirm.Trim().ToUpper()
+        
+        if ($confirm -eq 'N' -or $confirm -eq 'NO') {
+            Write-ColorOutput "Operation cancelled by user." -ForegroundColor Yellow
+            exit 0
+        }
+        elseif ($confirm -eq 'Y' -or $confirm -eq 'YES') {
+            break
+        }
+        else {
+            Write-ColorOutput "Please enter Y or N" -ForegroundColor Red
+        }
+    } while ($true)
 }
 
 # Execute changes
