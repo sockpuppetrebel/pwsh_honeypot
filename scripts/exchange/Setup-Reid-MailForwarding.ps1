@@ -2,11 +2,11 @@
 
 <#
 .SYNOPSIS
-    Sets up mail forwarding for specific legacy mailboxes to reid.holmes@optimizely.com
+    Sets up mail forwarding for specific legacy mailboxes to first.last@optimizely.com
     
 .DESCRIPTION
     Configures mail forwarding for the specified list of legacy AWS and Ektron mailboxes
-    to reid.holmes@optimizely.com. Preserves any existing forwarding settings.
+    to first.last@optimizely.com. Preserves any existing forwarding settings.
     
 .NOTES
     Author: Jason Slater
@@ -18,7 +18,7 @@
 $scriptPath = Join-Path $PSScriptRoot "Set-MailboxForwarding-Bulk.ps1"
 
 # Target recipient
-$targetRecipient = "reid.holmes@optimizely.com"
+$targetRecipient = "first.last@optimizely.com"
 
 # Source mailboxes to configure
 $sourceMailboxes = @(
@@ -34,7 +34,7 @@ $sourceMailboxes = @(
     "aws.welcome-webproofing2@episerver.net"
 )
 
-Write-Host "=== SETTING UP MAIL FORWARDING FOR REID HOLMES ===" -ForegroundColor Cyan
+Write-Host "=== SETTING UP MAIL FORWARDING FOR USER ===" -ForegroundColor Cyan
 Write-Host "Target recipient: $targetRecipient" -ForegroundColor Yellow
 Write-Host "Number of mailboxes: $($sourceMailboxes.Count)" -ForegroundColor Yellow
 Write-Host ""
