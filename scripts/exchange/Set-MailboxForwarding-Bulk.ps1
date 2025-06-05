@@ -185,12 +185,22 @@ if ($mailboxesToConfigure.Count -gt 0) {
 }
 
 if (-not $WhatIfPreference) {
-    Write-ColorOutput "`nProceed with configuration? (Y/N): " -ForegroundColor Yellow -NoNewline
-    $confirm = Read-Host
-    if ($confirm -ne 'Y' -and $confirm -ne 'y') {
-        Write-ColorOutput "Configuration cancelled." -ForegroundColor Yellow
-        exit 0
-    }
+    do {
+        Write-Host "`nProceed with configuration? (Y/N): " -ForegroundColor Yellow -NoNewline
+        $confirm = Read-Host
+        $confirm = $confirm.Trim().ToUpper()
+        
+        if ($confirm -eq 'N' -or $confirm -eq 'NO') {
+            Write-ColorOutput "Configuration cancelled." -ForegroundColor Yellow
+            exit 0
+        }
+        elseif ($confirm -eq 'Y' -or $confirm -eq 'YES') {
+            break
+        }
+        else {
+            Write-ColorOutput "Please enter Y or N" -ForegroundColor Red
+        }
+    } while ($true)
 }
 
 # Configure forwarding
