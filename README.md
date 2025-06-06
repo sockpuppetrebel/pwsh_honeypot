@@ -1,6 +1,6 @@
 # PowerShell Scripts Collection
 
-A comprehensive, well-organized collection of PowerShell scripts for managing Microsoft 365 services, with both Windows-specific and cross-platform versions. Designed for IT professionals who work across different operating systems and need reliable automation tools.
+A comprehensive, well-organized collection of PowerShell scripts for managing Microsoft 365 services, with both Windows-specific and cross-platform versions. Designed to make my own life easier as a sys admin, but decided to make this repo available to those who work across different operating systems and need additional reliable automation tools with PowerShell!
 
 ## Platform Support
 
@@ -15,15 +15,15 @@ This dual approach addresses the real-world challenge of bouncing between local 
 
 ```
 pwsh-honeypot/
-├── Config.ps1                           # Centralized configuration
-├── cross-platform/                      # 🚀 Cross-platform scripts (Windows/macOS/Linux)
+├── Config.ps1                          # Centralized configuration
+├── cross-platform/                     # Cross-platform scripts (Windows/macOS/Linux)
 │   ├── exchange/                       # Exchange Online management
 │   ├── mggraph/                        # Microsoft Graph operations
 │   │   └── user_management/            # User lookup and administration
-│   ├── m365/                          # Microsoft 365 operations
+│   ├── m365/                           # Microsoft 365 operations
 │   │   └── groups/                     # Group management scripts
 │   └── README.md                       # Cross-platform documentation
-├── scripts/                            # 🪟 Windows-only scripts (PowerShell 5.1)
+├── scripts/                            # Windows-only scripts (PowerShell 5.1)
 │   ├── exchange/                       # Exchange Online management
 │   ├── mggraph/                        # Microsoft Graph API scripts
 │   │   ├── group_management/           # Azure AD group operations
@@ -34,7 +34,7 @@ pwsh-honeypot/
 │       ├── auditing/                   # Permission auditing and reporting  
 │       ├── onedrive/                   # OneDrive-specific operations
 │       └── utilities/                  # Authentication, testing, diagnostics
-├── certificates/                        # Authentication certificates  
+├── certificates/                       # Authentication certificates  
 │   ├── azure/                          # Azure app certificates
 │   └── graph/                          # Microsoft Graph certificates
 ├── output/                             # Script outputs and reports
@@ -186,6 +186,7 @@ Optimized for enterprise environments:
 
 **Typical performance**: 7000+ SharePoint sites scanned in under 5 minutes
 
-## License
-
-These scripts are provided as-is for educational and administrative purposes. Always test in a development environment before running in production.
+## Signature
+Written, tested, and iterated under the Lima sun.  
+Last updated: June 2025  
+— J.S.
