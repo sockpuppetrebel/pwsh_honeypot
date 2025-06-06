@@ -16,7 +16,7 @@ This dual approach addresses the real-world challenge of bouncing between local 
 ```
 pwsh-honeypot/
 ├── Config.ps1                          # Centralized configuration
-├── cross-platform/                     #  Cross-platform scripts (Windows/macOS/Linux)
+├── cross-platform/                     # Cross-platform scripts (Windows/macOS/Linux)
 │   ├── exchange/                       # Exchange Online management
 │   ├── mggraph/                        # Microsoft Graph operations
 │   │   └── user_management/            # User lookup and administration
