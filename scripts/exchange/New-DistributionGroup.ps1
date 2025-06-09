@@ -153,3 +153,135 @@ try {
     exit 1
 }
 
+# Ask if user wants to add members
+Write-Host ""
+do {
+    Write-Host "Add members to this Distribution Group now? (Y/N): " -ForegroundColor Yellow -NoNewline
+    $addMembers = Read-Host
+    $addMembers = $addMembers.Trim().ToUpper()
+    
+    if ($addMembers -eq 'N' -or $addMembers -eq 'NO') {
+        Write-Host "[INFO] Distribution Group created without members. You can add members later." -ForegroundColor Yellow
+        break
+    }
+    elseif ($addMembers -eq 'Y' -or $addMembers -eq 'YES') {
+        # Prompt for member input
+        Write-Host "`nEnter email addresses to add (one per line):" -ForegroundColor Yellow
+        Write-Host "Press Enter twice when finished:" -ForegroundColor Gray
+        Write-Host "(You can paste multiple lines at once)`n" -ForegroundColor Gray
+        
+        # Collect multi-line input with robust handling
+        $inputLines = @()
+        $emptyLineCount = 0
+        
+        do {
+            try {
+                $line = Read-Host
+                if ($line.Trim() -eq "") {
+                    $emptyLineCount++
+                } else {
+                    $emptyLineCount = 0
+                    $inputLines += $line
+                }
+            }
+            catch {
+                # Handle any input interruption
+                break
+            }
+        } while ($emptyLineCount -lt 2)
+        
+        # Process all input lines and split by spaces/newlines
+        $allEmails = @()
+        foreach ($inputLine in $inputLines) {
+            # Split by spaces and filter out empty entries
+            $splitEmails = $inputLine -split '\s+' | Where-Object { $_.Trim() -ne "" }
+            $allEmails += $splitEmails
+        }
+        
+        # Validate and deduplicate emails
+        $emails = @()
+        $emailSet = @{}
+        
+        foreach ($email in $allEmails) {
+            $cleanEmail = $email.Trim()
+            
+            # Skip if empty
+            if ($cleanEmail -eq "") { continue }
+            
+            # Validate email format
+            if ($cleanEmail -match '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') {
+                # Check for duplicates (case insensitive)
+                $lowerEmail = $cleanEmail.ToLower()
+                if (-not $emailSet.ContainsKey($lowerEmail)) {
+                    $emails += $cleanEmail
+                    $emailSet[$lowerEmail] = $true
+                }
+            } else {
+                Write-Warning "[WARNING] Invalid email format: $cleanEmail (skipping)"
+            }
+        }
+        
+        # Check if any emails were provided
+        if ($emails.Count -eq 0) {
+            Write-Warning "[WARNING] No valid email addresses provided."
+            continue
+        }
+        
+        # Display emails to be added
+        Write-Host "`nEmails to be added:" -ForegroundColor Yellow
+        foreach ($email in $emails) {
+            Write-Host "  - $email" -ForegroundColor Gray
+        }
+        
+        # Confirmation for adding members
+        Write-Host ""
+        do {
+            Write-Host "Add these $($emails.Count) members to the group? (Y/N): " -ForegroundColor Yellow -NoNewline
+            $confirmMembers = Read-Host
+            $confirmMembers = $confirmMembers.Trim().ToUpper()
+            
+            if ($confirmMembers -eq 'N' -or $confirmMembers -eq 'NO') {
+                Write-Host "[INFO] Members not added." -ForegroundColor Yellow
+                break
+            }
+            elseif ($confirmMembers -eq 'Y' -or $confirmMembers -eq 'YES') {
+                # Process member additions
+                Write-Host "`n[INFO] Adding members..." -ForegroundColor Cyan
+                $successCount = 0
+                $failureCount = 0
+                
+                foreach ($email in $emails) {
+                    try {
+                        Add-DistributionGroupMember -Identity $GroupName -Member $email -ErrorAction Stop
+                        Write-Host "[SUCCESS] Added $email to $($newGroup.DisplayName)" -ForegroundColor Green
+                        $successCount++
+                    } catch {
+                        if ($_.Exception.Message -match "already a member") {
+                            Write-Host "[INFO] $email is already a member" -ForegroundColor Yellow
+                        } else {
+                            Write-Warning "[ERROR] Failed to add $email - $($_.Exception.Message)"
+                            $failureCount++
+                        }
+                    }
+                }
+                
+                # Display member addition summary
+                Write-Host "`n=================================" -ForegroundColor Cyan
+                Write-Host "Member Addition Complete:" -ForegroundColor Cyan
+                Write-Host "Successfully added: $successCount" -ForegroundColor Green
+                Write-Host "Failed to add: $failureCount" -ForegroundColor $(if ($failureCount -gt 0) { "Red" } else { "Green" })
+                Write-Host "Total members: $((Get-DistributionGroupMember -Identity $GroupName).Count)" -ForegroundColor Cyan
+                Write-Host "=================================" -ForegroundColor Cyan
+                break
+            }
+            else {
+                Write-Host "Please enter Y or N" -ForegroundColor Red
+            }
+        } while ($true)
+        break
+    }
+    else {
+        Write-Host "Please enter Y or N" -ForegroundColor Red
+    }
+} while ($true)
+
