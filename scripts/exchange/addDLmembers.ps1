@@ -55,7 +55,7 @@ Write-Host "Press Enter twice when finished:" -ForegroundColor Gray
 Write-Host "(You can paste multiple lines at once)`n" -ForegroundColor Gray
 
 # Collect multi-line input with robust handling
-$emails = @()
+$inputLines = @()
 $emptyLineCount = 0
 
 do {
@@ -65,12 +65,7 @@ do {
             $emptyLineCount++
         } else {
             $emptyLineCount = 0
-            # Validate email format
-            if ($line -match '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') {
-                $emails += $line.Trim()
-            } else {
-                Write-Warning "[WARNING] Invalid email format: $line (skipping)"
-            }
+            $inputLines += $line
         }
     }
     catch {
@@ -78,6 +73,37 @@ do {
         break
     }
 } while ($emptyLineCount -lt 2)
+
+# Process all input lines and split by spaces/newlines
+$allEmails = @()
+foreach ($inputLine in $inputLines) {
+    # Split by spaces and filter out empty entries
+    $splitEmails = $inputLine -split '\s+' | Where-Object { $_.Trim() -ne "" }
+    $allEmails += $splitEmails
+}
+
+# Validate and deduplicate emails
+$emails = @()
+$emailSet = @{}
+
+foreach ($email in $allEmails) {
+    $cleanEmail = $email.Trim()
+    
+    # Skip if empty
+    if ($cleanEmail -eq "") { continue }
+    
+    # Validate email format
+    if ($cleanEmail -match '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') {
+        # Check for duplicates (case insensitive)
+        $lowerEmail = $cleanEmail.ToLower()
+        if (-not $emailSet.ContainsKey($lowerEmail)) {
+            $emails += $cleanEmail
+            $emailSet[$lowerEmail] = $true
+        }
+    } else {
+        Write-Warning "[WARNING] Invalid email format: $cleanEmail (skipping)"
+    }
+}
 
 # Check if any emails were provided
 if ($emails.Count -eq 0) {
