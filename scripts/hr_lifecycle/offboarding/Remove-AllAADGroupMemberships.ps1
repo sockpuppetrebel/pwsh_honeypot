@@ -144,11 +144,11 @@ try {
         if ($PSCmdlet.ShouldProcess($groupName, "Remove user from group")) {
             try {
                 Remove-MgGroupMemberByRef -GroupId $group.ObjectId -DirectoryObjectId $user.Id -ErrorAction Stop
-                Write-Host "  ✓ Removed from: $groupName" -ForegroundColor Green
+                Write-Host "  Removed from: $groupName" -ForegroundColor Green
                 $removedCount++
             }
             catch {
-                Write-Host "  ✗ Failed to remove from: $groupName - Error: $_" -ForegroundColor Red
+                Write-Host "  Failed to remove from: $groupName - Error: $_" -ForegroundColor Red
                 $failedCount++
             }
         }

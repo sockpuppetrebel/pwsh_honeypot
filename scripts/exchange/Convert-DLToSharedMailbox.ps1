@@ -139,7 +139,7 @@ try {
             if ($member.RecipientType -like "*Mailbox*") {
                 Add-MailboxPermission -Identity $SharedMailbox.PrimarySmtpAddress -User $member.PrimarySmtpAddress -AccessRights FullAccess -InheritanceType All -AutoMapping $true -ErrorAction Stop
                 Add-RecipientPermission -Identity $SharedMailbox.PrimarySmtpAddress -Trustee $member.PrimarySmtpAddress -AccessRights SendAs -Confirm:$false -ErrorAction Stop
-                Write-Host "  ✓ Granted access to: $($member.DisplayName)" -ForegroundColor Green
+                Write-Host "  Granted access to: $($member.DisplayName)" -ForegroundColor Green
                 $successCount++
             }
             else {
@@ -147,7 +147,7 @@ try {
             }
         }
         catch {
-            Write-Host "  ✗ Failed to grant access to: $($member.DisplayName) - Error: $_" -ForegroundColor Red
+            Write-Host "  Failed to grant access to: $($member.DisplayName) - Error: $_" -ForegroundColor Red
             $failCount++
         }
     }

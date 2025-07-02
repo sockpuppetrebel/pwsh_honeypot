@@ -116,7 +116,7 @@ try {
         Mail = $user.Mail
         ObjectId = $user.Id
     }
-    Write-Host "  ✓ User found: $($user.DisplayName)" -ForegroundColor Green
+    Write-Host "  User found: $($user.DisplayName)" -ForegroundColor Green
     
     # Step 2: Get Group Memberships
     Write-Host "`n[Step 2/8] Getting group memberships..." -ForegroundColor Cyan
@@ -133,7 +133,7 @@ try {
             Mail = $groupDetails.Mail
         }
     }
-    Write-Host "  ✓ Found $($reportData.Groups.Count) group memberships" -ForegroundColor Green
+    Write-Host "  Found $($reportData.Groups.Count) group memberships" -ForegroundColor Green
     
     # Step 3: Get Licenses
     Write-Host "`n[Step 3/8] Getting assigned licenses..." -ForegroundColor Cyan
@@ -146,7 +146,7 @@ try {
                           Select-Object -ExpandProperty ServicePlanName
         }
     }
-    Write-Host "  ✓ Found $($reportData.Licenses.Count) licenses assigned" -ForegroundColor Green
+    Write-Host "  Found $($reportData.Licenses.Count) licenses assigned" -ForegroundColor Green
     
     # Step 4: Get Assigned Applications
     Write-Host "`n[Step 4/8] Getting assigned applications..." -ForegroundColor Cyan
@@ -159,7 +159,7 @@ try {
             AssignedRole = $assignment.AppRoleId
         }
     }
-    Write-Host "  ✓ Found $($reportData.Applications.Count) application assignments" -ForegroundColor Green
+    Write-Host "  Found $($reportData.Applications.Count) application assignments" -ForegroundColor Green
     
     # Step 5: Get Mailbox Permissions
     Write-Host "`n[Step 5/8] Getting mailbox permissions..." -ForegroundColor Cyan
@@ -196,7 +196,7 @@ try {
     } catch {
         Write-Host "  ! Unable to retrieve mailbox permissions" -ForegroundColor Yellow
     }
-    Write-Host "  ✓ Mailbox permissions retrieved" -ForegroundColor Green
+    Write-Host "  Mailbox permissions retrieved" -ForegroundColor Green
     
     # Step 6: Get SharePoint Access (if requested)
     if ($IncludeSharePoint) {
@@ -211,7 +211,7 @@ try {
                 Recommendation = "Run separate SharePoint audit script for detailed permissions"
             }
         )
-        Write-Host "  ✓ SharePoint access noted" -ForegroundColor Green
+        Write-Host "  SharePoint access noted" -ForegroundColor Green
     } else {
         Write-Host "`n[Step 6/8] Skipping SharePoint access (not requested)..." -ForegroundColor Gray
     }
@@ -240,7 +240,7 @@ try {
         $reportData.SecurityInfo.LastSignIn = @{ Note = "Unable to retrieve sign-in data" }
     }
     
-    Write-Host "  ✓ Security information retrieved" -ForegroundColor Green
+    Write-Host "  Security information retrieved" -ForegroundColor Green
     
     # Step 8: Generate Summary
     Write-Host "`n[Step 8/8] Generating summary..." -ForegroundColor Cyan

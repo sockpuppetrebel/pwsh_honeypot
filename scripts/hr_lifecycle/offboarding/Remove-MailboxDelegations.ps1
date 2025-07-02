@@ -246,10 +246,10 @@ try {
             if ($PSCmdlet.ShouldProcess($perm.Mailbox, "Remove Full Access for $UserPrincipalName")) {
                 try {
                     Remove-MailboxPermission -Identity $perm.Mailbox -User $UserPrincipalName -AccessRights FullAccess -Confirm:$false
-                    Write-Host "  ✓ Removed Full Access from: $($perm.DisplayName)" -ForegroundColor Green
+                    Write-Host "  Removed Full Access from: $($perm.DisplayName)" -ForegroundColor Green
                     $delegations.RemovalResults += @{Permission="FullAccess"; Target=$perm.Mailbox; Status="Success"}
                 } catch {
-                    Write-Host "  ✗ Failed to remove Full Access from: $($perm.DisplayName) - $_" -ForegroundColor Red
+                    Write-Host "  Failed to remove Full Access from: $($perm.DisplayName) - $_" -ForegroundColor Red
                     $delegations.RemovalResults += @{Permission="FullAccess"; Target=$perm.Mailbox; Status="Failed"; Error=$_.Exception.Message}
                 }
             }
@@ -260,10 +260,10 @@ try {
             if ($PSCmdlet.ShouldProcess($perm.Mailbox, "Remove Send As for $UserPrincipalName")) {
                 try {
                     Remove-RecipientPermission -Identity $perm.Mailbox -Trustee $UserPrincipalName -AccessRights SendAs -Confirm:$false
-                    Write-Host "  ✓ Removed Send As from: $($perm.DisplayName)" -ForegroundColor Green
+                    Write-Host "  Removed Send As from: $($perm.DisplayName)" -ForegroundColor Green
                     $delegations.RemovalResults += @{Permission="SendAs"; Target=$perm.Mailbox; Status="Success"}
                 } catch {
-                    Write-Host "  ✗ Failed to remove Send As from: $($perm.DisplayName) - $_" -ForegroundColor Red
+                    Write-Host "  Failed to remove Send As from: $($perm.DisplayName) - $_" -ForegroundColor Red
                     $delegations.RemovalResults += @{Permission="SendAs"; Target=$perm.Mailbox; Status="Failed"; Error=$_.Exception.Message}
                 }
             }
@@ -274,10 +274,10 @@ try {
             if ($PSCmdlet.ShouldProcess($perm.Mailbox, "Remove Send on Behalf for $UserPrincipalName")) {
                 try {
                     Set-Mailbox -Identity $perm.Mailbox -GrantSendOnBehalfTo @{Remove=$UserPrincipalName}
-                    Write-Host "  ✓ Removed Send on Behalf from: $($perm.DisplayName)" -ForegroundColor Green
+                    Write-Host "  Removed Send on Behalf from: $($perm.DisplayName)" -ForegroundColor Green
                     $delegations.RemovalResults += @{Permission="SendOnBehalf"; Target=$perm.Mailbox; Status="Success"}
                 } catch {
-                    Write-Host "  ✗ Failed to remove Send on Behalf from: $($perm.DisplayName) - $_" -ForegroundColor Red
+                    Write-Host "  Failed to remove Send on Behalf from: $($perm.DisplayName) - $_" -ForegroundColor Red
                     $delegations.RemovalResults += @{Permission="SendOnBehalf"; Target=$perm.Mailbox; Status="Failed"; Error=$_.Exception.Message}
                 }
             }
@@ -292,9 +292,9 @@ try {
                 if ($PSCmdlet.ShouldProcess($UserPrincipalName, "Remove Full Access for $($perm.User)")) {
                     try {
                         Remove-MailboxPermission -Identity $UserPrincipalName -User $perm.User -AccessRights FullAccess -Confirm:$false
-                        Write-Host "  ✓ Removed Full Access for: $($perm.User)" -ForegroundColor Green
+                        Write-Host "  Removed Full Access for: $($perm.User)" -ForegroundColor Green
                     } catch {
-                        Write-Host "  ✗ Failed to remove Full Access for: $($perm.User) - $_" -ForegroundColor Red
+                        Write-Host "  Failed to remove Full Access for: $($perm.User) - $_" -ForegroundColor Red
                     }
                 }
             }
@@ -304,9 +304,9 @@ try {
                 if ($PSCmdlet.ShouldProcess($UserPrincipalName, "Remove Send As for $($perm.User)")) {
                     try {
                         Remove-RecipientPermission -Identity $UserPrincipalName -Trustee $perm.User -AccessRights SendAs -Confirm:$false
-                        Write-Host "  ✓ Removed Send As for: $($perm.User)" -ForegroundColor Green
+                        Write-Host "  Removed Send As for: $($perm.User)" -ForegroundColor Green
                     } catch {
-                        Write-Host "  ✗ Failed to remove Send As for: $($perm.User) - $_" -ForegroundColor Red
+                        Write-Host "  Failed to remove Send As for: $($perm.User) - $_" -ForegroundColor Red
                     }
                 }
             }
@@ -316,9 +316,9 @@ try {
                 if ($PSCmdlet.ShouldProcess($UserPrincipalName, "Clear all Send on Behalf delegates")) {
                     try {
                         Set-Mailbox -Identity $UserPrincipalName -GrantSendOnBehalfTo $null
-                        Write-Host "  ✓ Cleared all Send on Behalf delegates" -ForegroundColor Green
+                        Write-Host "  Cleared all Send on Behalf delegates" -ForegroundColor Green
                     } catch {
-                        Write-Host "  ✗ Failed to clear Send on Behalf delegates - $_" -ForegroundColor Red
+                        Write-Host "  Failed to clear Send on Behalf delegates - $_" -ForegroundColor Red
                     }
                 }
             }
